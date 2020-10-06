@@ -1,27 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Login from './Login'
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import logo from './logo.svg';
+//import './App.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
+//import { Form, Button, Container, Col, Row } from 'react-bootstrap';
+//import Login from './Components/Login';
+import Menus from './Components/Menus';
+
+
 function App() {
   return (
-    <Login />
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
+          // <Login></Login>
+          <Menus></Menus>
+          // <></>
   );
 }
 
