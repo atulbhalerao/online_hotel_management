@@ -1,14 +1,18 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Container, Col, Row } from 'react-bootstrap';
-
+import DataAccess from '../Services/DataAcces'
 function AddUser() {
+    
+    // const dbObj = new DataAccess();
+    // dbObj.SelectData('SELECT * from foo2', (tx, result)=> { console.dir(result.rows) }, (tx, result)=> { console.dir(result) });
+    
   return (
           <Row className="justify-content-md-center">
             <Col xs lg="2"></Col>
             <Col xs lg="8">
               <Container>
-                <Form classNames="form-horizontal">
+                <Form className="form-horizontal">
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>Add User</h1>
                     
                     <Form.Group as={Row}>
@@ -30,7 +34,7 @@ function AddUser() {
                             Gender
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale' checked />
+                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale' />
                             <Form.Check inline label="Female" type='radio' name="gender" id='chkFemale' />
                         </Col>
                     </Form.Group>

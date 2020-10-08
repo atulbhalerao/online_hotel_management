@@ -13,94 +13,51 @@ function AddRoom() {
                     
                     <Form.Group as={Row}>
                         <Form.Label column sm="2" className="font-weight-bold">
-                            First Name
+                            Room Number
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="First name" required />
+                            <Form.Control type="text" placeholder="Room Number" required />
                         </Col>
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Last Name
+                            Floor Number
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="Last name" required />
+                            <Form.Control type="text" placeholder="Floor Number" required />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Gender
+                            Room type
                         </Form.Label>
-                        <Col sm="10">
-                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale' checked />
-                            <Form.Check inline label="Female" type='radio' name="gender" id='chkFemale' />
+                        <Col sm="4">
+                            <Form.Control type="text" placeholder="Room Type" required />
+                        </Col>
+                        <Form.Label column sm="2" className="font-weight-bold">
+                            Capacity
+                        </Form.Label>
+                        <Col sm="4">
+                            <Form.Control type="text" placeholder="Capacity" />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Email Address
+                            Rate
                         </Form.Label>
-                        <Col sm="10">
-                            <Form.Control type="email" placeholder="Email address" required />
+                        <Col sm="4">
+                            <Form.Control type="text" placeholder="Rate" required />
                         </Col>
+                        
                     </Form.Group>
+                    
                     <Form.Group as={Row} >
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Mobile No
+                            Amenities
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="Mobile number" required />
-                        </Col>
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            PAN Number
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control type="text" placeholder="PAN number" />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} >
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            User Name
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control type="text" placeholder="User name" required />
-                        </Col>
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            Password
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control type="text" placeholder="Password" required />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} >
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            User Type
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control as="select">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Form.Control>
-                        </Col>
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            Department
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control as="select" required>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Form.Control>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} >
-                        <Form.Label column sm="2" className="font-weight-bold">
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Check type="checkbox" label="Is Active" />
+                            <Form.Check type="checkbox" label="AC" />
+                            <Form.Check type="checkbox" label="Wi-Fi" />
+                            <Form.Check type="checkbox" label="TV" />
+                            <Form.Check type="checkbox" label="Telephone" />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >

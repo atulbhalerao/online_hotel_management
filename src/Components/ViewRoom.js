@@ -13,30 +13,26 @@ function ViewRoom() {
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>View Room</h1>
                     <Form.Group as={Row}>
                         <Form.Label column sm="1" className="font-weight-bold">
-                            Name
+                            Room No
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control type="text" placeholder="name"  />
+                            <Form.Control type="text" placeholder="Room Number"  />
                         </Col>
                         <Form.Label column sm="1" className="font-weight-bold">
-                            User Name
+                            Floor
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control type="text" placeholder="user name" />
+                            <Form.Control type="text" placeholder="Floor" />
                         </Col>
                         <Form.Label column sm="1" className="font-weight-bold">
-                            User Type
+                            Capacity
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control as="select">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Form.Control>
+                            <Form.Control type="text" placeholder="Capacity" />
                         </Col>
-                        <Col sm="3">
+                        <Col sm="3" >
+                            <Form.Check type="checkbox" label="Is Reserved" sm="6" style={{ display: "inline"}}/>
+                            &nbsp; &nbsp;
                             <Button variant="primary" type="submit">
                                 Search
                             </Button> 
@@ -48,12 +44,13 @@ function ViewRoom() {
                 <thead>
                     <tr>
                     <th></th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Mobile No</th>
-                    <th>User Type</th>
-                    <th>Is Active</th>
+                    <th>Room No</th>
+                    <th>Floor No</th>
+                    <th>Room Type</th>
+                    <th>Capacity</th>
+                    <th>Rate</th>
+                    <th>Reservered From</th>
+                    <th>Reservered Till</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,27 +58,29 @@ function ViewRoom() {
                         <td>
                             <Button variant="primary" type="Button" size="sm">
                                     Select
-                            </Button> 
+                            </Button>
                         </td>
-                        <td>Atul</td>
-                        <td>Bhalerao</td>
-                        <td>atulbhalerao</td>
-                        <td>9012345678</td>
-                        <td>Manager</td>
-                        <td>True</td>
+                        <td>1001</td>
+                        <td>First</td>
+                        <td>1 BHK</td>
+                        <td>2 Persons</td>
+                        <td>$2500/Day</td>
+                        <td>20/10/2020</td>
+                        <td>25/10/2020</td>
                     </tr>
                     <tr>
-                        <td>
-                            <Button variant="primary" type="Button" size="sm">
-                                    Select
-                            </Button> 
+                    <td>
+                        <Button variant="primary" type="Button" size="sm">
+                                Select
+                        </Button>
                         </td>
-                        <td>Atul</td>
-                        <td>Bhalerao</td>
-                        <td>atulbhalerao</td>
-                        <td>9012345678</td>
-                        <td>Manager</td>
-                        <td>True</td>
+                        <td>1001</td>
+                        <td>First</td>
+                        <td>1 BHK</td>
+                        <td>2 Persons</td>
+                        <td>$2500/Day</td>
+                        <td>20/10/2020</td>
+                        <td>25/10/2020</td>
                     </tr>
                 </tbody>
                 </Table>
