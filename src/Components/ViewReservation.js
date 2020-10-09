@@ -9,7 +9,7 @@ function ViewReservation() {
             <Col xs lg="1"></Col>
             <Col xs lg="10">
               {/* <Container> */}
-                <Form classNames="form-horizontal" style={{paddingBottom: '20px'}}>
+                <Form className="form-horizontal" style={{paddingBottom: '20px'}}>
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>View Reservation</h1>
                     <Form.Group as={Row}>
                         <Form.Label column sm="1" className="font-weight-bold">

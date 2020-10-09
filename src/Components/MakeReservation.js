@@ -8,7 +8,7 @@ function MakeReservation() {
             <Col xs lg="2"></Col>
             <Col xs lg="8">
               <Container>
-                <Form classNames="form-horizontal">
+                <Form className="form-horizontal">
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>Make Reservation</h1>
                     
                     <Form.Group as={Row}>

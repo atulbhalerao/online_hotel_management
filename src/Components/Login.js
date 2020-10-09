@@ -9,7 +9,7 @@ function Login() {
             <Col xs lg="4"></Col>
             <Col xs lg="4">
               <Container>
-                <Form classNames="form-horizontal" onSubmit={ alert('Submitted') }>
+                <Form className="form-horizontal" onSubmit={ alert('Submitted') }>
                   <h1 style={{textAlign:"center", paddingTop:'80px', paddingBottom:'15px' }}>Login</h1>
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label className="control-label">Username</Form.Label>
