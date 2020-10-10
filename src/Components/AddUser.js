@@ -9,7 +9,7 @@ let initForm = {
     email : '', mobileno : '',
     pan : '', username : '',
     password : '', usertypeid : 0,
-    departmentid : 0, IsActive : false,
+    departmentid : 0, IsActive : true,
     rdMale : true, rdFemale : false
 };
 
@@ -21,15 +21,12 @@ function AddUser(props) {
     let sql =''
 
     useEffect(()=>{
-        console.dir(props.match.params.id);
         fillDropDown();
         if(props.match.params.id)
         {
             GetUserDetails(props.match.params.id)
         }
     },[]);
-
-    
 
     const fillDropDown = ()=>{
         //Initial Page Load Data
@@ -59,7 +56,7 @@ function AddUser(props) {
             for (let i = 0; i < result.length; i++) 
             {
                 let item = result[i];
-                setFormData({
+                let controlData = {
                     userid  : item.USER_ID, firstname : item.FIRST_NAME,
                     lastname : item.LAST_NAME, gender : item.GENDER,
                     email : item.EMAIL_ID, mobileno : item.MOBILE_NO,
@@ -67,7 +64,9 @@ function AddUser(props) {
                     password : item.PASSWORD, usertypeid : item.USER_TYPE,
                     departmentid : item.DEPARTMENT_ID, IsActive : (item.IS_ACTIVE == 1 ? true : false),
                     rdMale : (item.GENDER == 'Male' ? true : false), rdFemale : (item.GENDER == 'Female' ? true : false)
-                });
+                }
+                setFormData(controlData);
+                console.dir(controlData);
             }
         }, 
         (tx, result)=> { });
@@ -247,28 +246,32 @@ function AddUser(props) {
                             User Type
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control as="select" id="usertypeid" onChange={ onChange } >
-                            {
-                                userTypes.map((item, index)=>{
-                                    return (
-                                        <option key={item.key} id={item.key}>{item.value}</option>
-                                    )
-                                })
-                            } 
+                            <Form.Control as="select" id="usertypeid" 
+                                value = {formData.usertypeid} 
+                                onChange={e => setFormData({...formData, usertypeid: e.currentTarget.value})} >
+                                {
+                                    userTypes.map((item, index)=>{
+                                        return (
+                                            <option key={item.key} id={item.key} value={item.key}>{item.value}</option>
+                                        )
+                                    })
+                                } 
                             </Form.Control>
                         </Col>
                         <Form.Label column sm="2" className="font-weight-bold">
                             Department
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control as="select" required id="departmentid" onChange={ onChange } required>
-                            {
-                                departments.map((item, index)=>{
-                                    return (
-                                        <option key={item.key} id={item.key}>{item.value}</option>
-                                    )
-                                })
-                            } 
+                            <Form.Control as="select" required id="departmentid" 
+                                value = {formData.departmentid} 
+                                onChange={e => setFormData({...formData, departmentid: e.currentTarget.value})} >                                
+                                {
+                                    departments.map((item, index)=>{
+                                        return (
+                                            <option key={item.key} id={item.key} value={item.key}>{item.value}</option>
+                                        )
+                                    })
+                                } 
                             </Form.Control>
                         </Col>
                     </Form.Group>
@@ -276,7 +279,7 @@ function AddUser(props) {
                         <Form.Label column sm="2" className="font-weight-bold">
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Check type="checkbox" label="Is Active" id='IsActive' onChange={ onChange } value={formData.IsActive}  />
+                            <Form.Check type="checkbox" label="Is Active" id='IsActive' onChange={ onChange } checked = {formData.IsActive} defaultChecked={formData.IsActive}  />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >

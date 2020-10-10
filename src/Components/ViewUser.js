@@ -120,14 +120,16 @@ function ViewUser() {
                             User Type
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control as="select" id="usertypeid" value = {searchCriteria.usertypeid} onChange={e => setSearchCriteria({...searchCriteria, usertypeid: e.currentTarget.value})} >
-                            {
-                                userTypes.map((item, index)=>{
-                                    return (
-                                        <option key={item.key} id={item.key} value={item.key}>{item.value}</option>
-                                    )
-                                })
-                            } 
+                            <Form.Control as="select" id="usertypeid" 
+                                value = {searchCriteria.usertypeid} 
+                                onChange={e => setSearchCriteria({...searchCriteria, usertypeid: e.currentTarget.value})} >
+                                {
+                                    userTypes.map((item, index)=>{
+                                        return (
+                                            <option key={item.key} id={item.key} value={item.key}>{item.value}</option>
+                                        )
+                                    })
+                                } 
                             </Form.Control>
                         </Col>
                         <Col sm="3">
