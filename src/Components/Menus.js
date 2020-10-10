@@ -55,8 +55,10 @@ function Menus() {
           <Route exact path='/AddUser/:id'  component={AddUser} />
           <Route exact path='/ViewUser'  component={ViewUser} />
           <Route exact path='/AddRoom'  component={AddRoom} />
+          <Route exact path='/AddRoom/:id'  component={AddRoom} />
           <Route exact path='/ViewRoom'  component={ViewRoom} />
           <Route exact path='/MakeReservation'  component={MakeReservation} />
+          <Route exact path='/MakeReservation/:id'  component={MakeReservation} />
           <Route exact path='/ViewReservation'  component={ViewReservation} />
     </Switch>    
   </Router>

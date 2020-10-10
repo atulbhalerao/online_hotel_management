@@ -161,7 +161,7 @@ function AddUser(props) {
                 "'"+ formData.email +"', '"+ formData.mobileno + "', '"+ formData.pan + "', " +
                 "'"+ formData.username +"', '" + formData.password +"', "+ formData.usertypeid + ", "+ formData.departmentid + ", " + 
                 formData.IsActive + ")";
-                localStorage.setItem("query", sql)
+                //localStorage.setItem("query", sql)
                 dbObj.ExecuteSQL(sql, [], 
                     (tx, result)=> { setFormData({...formData, userid: result.insertId})
                     alert('Data saved successfully');    

@@ -42,8 +42,10 @@ function ViewUser() {
                     userid : item.USER_ID,
                     firstname : item.FIRST_NAME,
                     lastname : item.LAST_NAME,
+                    gender : item.GENDER,
                     username : item.USERNAME,
                     mobileno : item.MOBILE_NO,
+                    email : item.EMAIL_ID,
                     usertype : item.USER_TYPE,
                     isactive : item.IS_ACTIVE ? 'Yes' : 'No',
                 })
@@ -97,7 +99,15 @@ function ViewUser() {
       };
 
     const handleDeleteEvent = (id)=>{
-        alert('delete call');
+        sql = "DELETE FROM USER WHERE USER_ID = " + id;
+        dbObj.ExecuteSQL(sql, [], (tx, res)=> {
+            var usrList = users.filter(usr=> usr.userid != id); 
+            setUsers(usrList);
+            alert('Record deleted successfully');
+        }, 
+        (tx, result)=> { 
+            alert('Something went wrong');
+        });
     }
     return (
           <Row className="justify-content-md-center">
@@ -150,14 +160,16 @@ function ViewUser() {
               <Table striped bordered hover>
                 <thead>
                     <tr>
-                    <th style={{ width : '60px'}}></th>
-                    <th style={{ width : '60px'}}></th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Mobile No</th>
-                    <th>User Type</th>
-                    <th>Is Active</th>
+                    <th style={{ width : '5%'}}></th>
+                    <th style={{ width : '5%'}}></th>
+                    <th style={{ width : '12%'}}>First Name</th>
+                    <th style={{ width : '12%'}}>Last Name</th>
+                    <th style={{ width : '7%'}}>Gender</th>
+                    <th style={{ width : '12%'}}>Username</th>
+                    <th style={{ width : '11%'}}>Mobile No</th>
+                    <th>Email</th>
+                    <th style={{ width : '8%'}}>User Type</th>
+                    <th style={{ width : '7%'}}>Is Active</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -175,16 +187,17 @@ function ViewUser() {
                                             Delete
                                     </Button> 
                                 </td>
-                                <td>{item.firstname}</td>
-                                <td>{item.lastname}</td>
-                                <td>{item.username}</td>
+                                <td style={{wordBreak : "break-all"}}>{item.firstname}</td>
+                                <td style={{wordBreak : "break-all"}}>{item.lastname}</td>
+                                <td>{item.gender}</td>
+                                <td style={{wordBreak : "break-all"}}>{item.username}</td>
                                 <td>{item.mobileno}</td>
+                                <td style={{wordBreak : "break-all"}}>{item.email}</td>
                                 <td>{item.usertype}</td>
                                 <td>{item.isactive}</td>
                             </tr>
                         )
                     })
-                 
                  }
                    
                 </tbody>
