@@ -96,10 +96,13 @@ function ViewUser() {
         history.push('/AddUser/' + id);
       };
 
+    const handleDeleteEvent = (id)=>{
+        alert('delete call');
+    }
     return (
           <Row className="justify-content-md-center">
-            <Col xs lg="1"></Col>
-            <Col xs lg="10">
+            {/* <Col xs lg="1"></Col> */}
+            <Col xs lg="11">
               {/* <Container> */}
                 <Form className="form-horizontal" style={{paddingBottom: '20px'}} onSubmit={PopulateUsersList}>
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>View User</h1>
@@ -136,7 +139,7 @@ function ViewUser() {
                             <Button variant="primary" type="submit">
                                 Search
                             </Button> 
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;
                             <Button variant="primary" type="button" onClick={ resetControlState }>
                                 Clear
                             </Button> 
@@ -147,7 +150,8 @@ function ViewUser() {
               <Table striped bordered hover>
                 <thead>
                     <tr>
-                    <th></th>
+                    <th style={{ width : '60px'}}></th>
+                    <th style={{ width : '60px'}}></th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Username</th>
@@ -166,6 +170,11 @@ function ViewUser() {
                                             Select
                                     </Button> 
                                 </td>
+                                <td>
+                                    <Button variant="primary" type="Button" id ={item.userid} size="sm" onClick={ () => handleDeleteEvent(item.userid) }>
+                                            Delete
+                                    </Button> 
+                                </td>
                                 <td>{item.firstname}</td>
                                 <td>{item.lastname}</td>
                                 <td>{item.username}</td>
@@ -181,7 +190,7 @@ function ViewUser() {
                 </tbody>
                 </Table>
             </Col>
-            <Col xs lg="1"></Col>
+            {/* <Col xs lg="1"></Col> */}
           </Row>
   );
 }

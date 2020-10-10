@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 import DataAccess from '../Services/DataAcces'
+import { useHistory } from 'react-router-dom'
 
 let initForm = {
     userid  : 0, firstname : '',
@@ -18,6 +19,7 @@ function AddUser(props) {
     const [departments, setDepartments] = useState([]);
     const [userTypes, setUserTypes] = useState([]);
     const [formData, setFormData] = useState(initForm);
+    const history = useHistory();
     let sql =''
 
     useEffect(()=>{
@@ -66,7 +68,6 @@ function AddUser(props) {
                     rdMale : (item.GENDER == 'Male' ? true : false), rdFemale : (item.GENDER == 'Female' ? true : false)
                 }
                 setFormData(controlData);
-                console.dir(controlData);
             }
         }, 
         (tx, result)=> { });
@@ -147,8 +148,8 @@ function AddUser(props) {
                 "WHERE USER_ID = " + formData.userid
 
             dbObj.ExecuteSQL(sql, [], 
-                (tx, result)=> { console.dir(result) }, 
-                (tx, result)=> { console.dir(result) });
+                (tx, result)=> { alert('Data updated successfully'); }, 
+                (tx, result)=> { alert('Something went wrong'); });
         }
         else
         {
@@ -162,8 +163,9 @@ function AddUser(props) {
                 formData.IsActive + ")";
                 localStorage.setItem("query", sql)
                 dbObj.ExecuteSQL(sql, [], 
-                    (tx, result)=> { setFormData({...formData, userid: result.insertId})}, 
-                    (tx, result)=> { console.dir(result) });
+                    (tx, result)=> { setFormData({...formData, userid: result.insertId})
+                    alert('Data saved successfully');    
+                }, (tx, result)=> { alert('Something went wrong'); });
             }
             else
             {
@@ -171,7 +173,11 @@ function AddUser(props) {
                 return false;
             }
         }
-        
+    }
+
+    const clearControlState = (e)=>{
+        history.push('/AddUser');
+        setFormData(initForm);
     }
     
   return (
@@ -279,7 +285,7 @@ function AddUser(props) {
                         <Form.Label column sm="2" className="font-weight-bold">
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Check type="checkbox" label="Is Active" id='IsActive' onChange={ onChange } checked = {formData.IsActive} defaultChecked={formData.IsActive}  />
+                            <Form.Check type="checkbox" label="Is Active" id='IsActive' onChange={ onChange } checked = {formData.IsActive}  />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
@@ -289,7 +295,7 @@ function AddUser(props) {
                             <Button variant="primary" type="submit">
                                 Submit
                             </Button> &nbsp;&nbsp;
-                            <Button variant="primary" type="Button">
+                            <Button variant="primary" type="Button" onClick = { clearControlState }>
                                 Cancel
                             </Button>
                         </Col>
