@@ -91,7 +91,7 @@ function AddUser(props) {
             case 'USER_TYPE' :
                 for (let i = 0; i < result.length; i++) 
                 {
-                    console.dir()
+                   
                     let item = result[i];
                     arr.push({key : item.USER_TYPE_ID, value : item.USER_TYPE})
                 }

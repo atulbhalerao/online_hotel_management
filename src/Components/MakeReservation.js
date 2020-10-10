@@ -1,61 +1,156 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Container, Col, Row } from 'react-bootstrap';
+import DataAccess from '../Services/DataAcces'
+import { useHistory } from 'react-router-dom'
+
+let initForm = {
+    reservationid : 0, roomid : 0,
+    checkin : '', checkout : '',
+    guest : [{
+        firstname : '', lastname : '',
+        address : '', email : '', mobileno : ''
+    }]
+};
+
 
 function MakeReservation() {
-  return (
+    const dbObj = new DataAccess();
+    const [rooms, setRooms] = useState([]);
+    const [room, setRoom] = useState({});
+    const [formData, setFormData] = useState(initForm);
+    let sql =''
+
+    useEffect(()=>{
+        PopulateAvailableRooms();
+    },[formData.checkin,formData.checkout]);
+
+    useEffect(()=>{
+        if(formData.roomid > 0)
+        {
+            GetRoomDetails(formData.roomid)
+        }
+        else
+        {
+            setRoom({})
+        }
+    },[formData.roomid]);
+
+    const onChange = (e) => {  
+        //e.persist();
+        //console.dir(e.target)
+        setFormData({...formData, [e.target.id]: e.target.value}); 
+    }
+
+    const PopulateAvailableRooms = ()=>{
+        if(formData.checkin && formData.checkout)
+        {
+            let sql = "SELECT 0 AS ROOM_ID, '--SELECT--' AS ROOM_NO UNION " +
+                "SELECT R.ROOM_ID, R.ROOM_NO FROM ROOM R LEFT JOIN RESERVATION_ROOM RR ON R.ROOM_ID = RR.ROOM_ID " + 
+                " LEFT JOIN RESERVATION RS ON RR.RESERVATION_ID = RS.RESERVATION_ID " + 
+                "WHERE (RS.CHECK_IN IS NULL OR (RS.CHECK_IN NOT BETWEEN DATETIME('" + formData.checkin + "') AND DATETIME('" + formData.checkout + "'))) " +
+                "AND (RS.CHECK_OUT IS NULL OR (RS.CHECK_OUT NOT BETWEEN DATETIME('" + formData.checkin + "') AND DATETIME('" + formData.checkout + "'))) ";
+               
+            //console.dir(sql);
+            dbObj.ExecuteSQL(sql, [], (tx, res)=> { 
+                let result = res.rows;
+                let arr = []
+                for (let i = 0; i < result.length; i++) 
+                {
+                    let item = result[i];
+                    arr.push({key : item.ROOM_ID, value : item.ROOM_NO})
+                }
+                setRooms(arr);
+            }, 
+            (tx, result)=> { console.dir(result) });
+        }
+    }
+
+    const GetRoomDetails = (rmId) =>{
+        sql = "SELECT ROOM_ID, ROOM_NO, FLOOR_NO, ROOM_TYPE, CAPACITY, RATE, AMENITIES " +
+            "FROM ROOM WHERE ROOM_ID = " + rmId
+            
+        dbObj.ExecuteSQL(sql, [], (tx, res)=> { 
+           
+            var result = res.rows;
+            for (let i = 0; i < result.length; i++) 
+            {
+                let item = result[i];
+                let controlData = {
+                    roomid  : item.ROOM_ID, roomno : item.ROOM_NO,
+                    floorno : item.FLOOR_NO, roomtype : item.ROOM_TYPE,
+                    capacity : String(item.CAPACITY) + ' Person(s)', rate : '₹ ' + String(item.RATE),
+                    amenities : item.AMENITIES
+                };
+                setRoom(controlData);
+                console.dir(controlData)
+            }
+        }, 
+        (tx, result)=> { });
+    }
+
+    return (
           <Row className="justify-content-md-center">
             <Col xs lg="2"></Col>
             <Col xs lg="8">
               <Container>
                 <Form className="form-horizontal">
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>Make Reservation</h1>
-                    
+                    <Form.Group as={Row} >
+                        <Form.Label column sm="2" className="font-weight-bold">
+                            Check In
+                        </Form.Label>
+                        <Col sm="4">
+                            <Form.Control type="date"  id="checkin" onChange = {onChange} value = {formData.checkin} />
+                        </Col>
+                        <Form.Label column sm="2" className="font-weight-bold">
+                            Check out
+                        </Form.Label>
+                        <Col sm="4">
+                            <Form.Control type="date" id="checkout" onChange = {onChange} value = {formData.checkout} />
+                        </Col>
+                    </Form.Group>
                     <Form.Group as={Row}>
                         <Form.Label column sm="2" className="font-weight-bold">
-                            First Name
+                            Room No
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="First name" required />
-                        </Col>
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            Last Name
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control type="text" placeholder="Last name" required />
+                        <Form.Control as="select" required id="roomid" 
+                                value = {formData.roomid} 
+                                onChange={e => setFormData({...formData, roomid: e.currentTarget.value})} >                                
+                                {
+                                    rooms.map((item, index)=>{
+                                        return (
+                                            <option key={item.key} id={item.key} value={item.key}>{item.value}</option>
+                                        )
+                                    })
+                                } 
+                            </Form.Control>
                         </Col>
                     </Form.Group>
-                    <Form.Group as={Row} >
+                    <Form.Group as={Row} style={{ display : formData.roomid > 0 ? '' : 'none' }} >
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Gender
+                            Room Details
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale' checked />
-                            <Form.Check inline label="Female" type='radio' name="gender" id='chkFemale' />
+                        <Form.Label >
+                            Floor : { room.floorno } <br/>
+                            Room Type : { room.roomtype } <br/>
+                            Capacity : { room.capacity } <br/>
+                            Rate : { room.rate } <br/>
+                            Amenities : { room.amenities }
+                        </Form.Label>                            
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
                         <Form.Label column sm="2" className="font-weight-bold">
-                            Email Address
-                        </Form.Label>
-                        <Col sm="10">
-                            <Form.Control type="email" placeholder="Email address" required />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} >
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            Mobile No
+                            No of Guest(s)
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="Mobile number" required />
-                        </Col>
-                        <Form.Label column sm="2" className="font-weight-bold">
-                            PAN Number
-                        </Form.Label>
-                        <Col sm="4">
-                            <Form.Control type="text" placeholder="PAN number" />
+                            <Form.Control type="number" placeholder="Guest" required />
                         </Col>
                     </Form.Group>
+                    
                     <Form.Group as={Row} >
                         <Form.Label column sm="2" className="font-weight-bold">
                             User Name
