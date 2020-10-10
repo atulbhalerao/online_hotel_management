@@ -90,11 +90,11 @@ class DataAccess
 {
     //TABLE STRUCUTRE 
 
-    SelectData = (sqlQuery, successCallback, errorCallback) =>
+    ExecuteSQL = (sqlQuery, data, successCallback, errorCallback) =>
     {
         //console.dir(sqlQuery)
         db.transaction(function (tx) {
-            tx.executeSql(sqlQuery, [], successCallback, errorCallback);
+            tx.executeSql(sqlQuery, data, successCallback, errorCallback);
         });
     }
 

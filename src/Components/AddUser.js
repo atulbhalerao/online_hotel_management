@@ -4,36 +4,36 @@ import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 import DataAccess from '../Services/DataAcces'
 
 let initForm = {
-    firstname : '',
-    lastname : '',
-    gender : '',
-    email : '',
-    mobileno : '',
-    pan : '',
-    username : '',
-    password : '',
-    usertypeid : 0,
-    departmentid : 0,
-    IsActive : 0
+    userid  : 0, firstname : '',
+    lastname : '', gender : 'Male',
+    email : '', mobileno : '',
+    pan : '', username : '',
+    password : '', usertypeid : 0,
+    departmentid : 0, IsActive : false,
+    rdMale : true, rdFemale : false
 };
 
 function AddUser() {
     const dbObj = new DataAccess();
     const [departments, setDepartments] = useState([]);
     const [userTypes, setUserTypes] = useState([]);
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(initForm);
 
     useEffect(()=>{
-        let sql = "SELECT * FROM DEPARTMENT";
-
-        dbObj.SelectData(sql, (tx, result)=> { 
+        //Initial Page Load Data
+        let sql = "SELECT 0 AS DEPARTMENT_ID, '--SELECT--' AS DEPARTMENT UNION " +
+                "SELECT DEPARTMENT_ID, DEPARTMENT FROM DEPARTMENT";
+                
+        dbObj.ExecuteSQL(sql, [], (tx, result)=> { 
             fillControlData(result.rows, 'DEPARTMENT') }, 
             (tx, result)=> {  });
 
-        sql = "SELECT * FROM USER_TYPE";
-        dbObj.SelectData(sql, (tx, result)=> { 
+        sql = "SELECT 0 AS USER_TYPE_ID, '--SELECT--' AS USER_TYPE UNION " +
+            "SELECT USER_TYPE_ID, USER_TYPE FROM USER_TYPE";
+        dbObj.ExecuteSQL(sql, [], (tx, result)=> { 
             fillControlData(result.rows, 'USER_TYPE') }, 
             (tx, result)=> {  });
+        //Initial Page Load Data
 
     },[]);
 
@@ -69,17 +69,82 @@ function AddUser() {
     }
     
     const onChange = (e) => {  
-        e.persist();
-        setFormData({...formData, [e.target.id]: e.target.value});  
-        console.dir(formData);
+        //e.persist();
+        if(e.target.id === 'chkMale' && e.target.checked === true)
+        {
+            setFormData({...formData, gender: 'Male', rdMale : true, rdFemale : false});  
+        }
+        else if(e.target.id === 'chkFemale' && e.target.checked === true)
+        {
+            setFormData({...formData, gender: 'Female', rdMale : false, rdFemale : true});  
+        }
+        else if(e.target.id === 'IsActive')
+        {
+            setFormData({...formData, IsActive: e.target.checked});  
+        }
+        else if(e.target.id === 'usertypeid')
+        {
+            setFormData({...formData, usertypeid: e.target.selectedOptions[0].id});  
+        }
+        else if(e.target.id === 'departmentid')
+        {
+            setFormData({...formData, departmentid: e.target.selectedOptions[0].id}); 
+        }
+        else{
+            setFormData({...formData, [e.target.id]: e.target.value});  
+        }
+        //console.dir(e.target);
+        //console.dir(formData);
     } 
+
+    const InsertUserData = (e)=>
+    {
+        e.preventDefault();
+        let sql = "";
+        if(formData.userid > 0)
+        {
+            sql ="UPDATE USER SET FIRST_NAME ='" + formData.firstname + "', " +
+                "LAST_NAME = '" + formData.lastname + "', GENDER = '" + formData.gender + "', " +
+                "EMAIL_ID = '" + formData.email + "', MOBILE_NO = '" + formData.mobileno + "', " +
+                "PAN_NO = '" + formData.pan + "', USERNAME = '" + formData.username + "', " +
+                "PASSWORD = '" + formData.password + "', USER_TYPE = " + formData.usertypeid + ", " +
+                "DEPARTMENT_ID = " + formData.departmentid + ", IS_ACTIVE = " + formData.IsActive + " " +
+                "WHERE USER_ID = " + formData.userid
+
+            dbObj.ExecuteSQL(sql, [], 
+                (tx, result)=> { console.dir(result) }, 
+                (tx, result)=> { console.dir(result) });
+        }
+        else
+        {
+            if(formData.usertypeid > 0 && formData.departmentid > 0)
+            {
+                sql = "INSERT INTO USER (FIRST_NAME, LAST_NAME, GENDER, EMAIL_ID, MOBILE_NO, "+
+                "PAN_NO, USERNAME, PASSWORD, USER_TYPE, DEPARTMENT_ID, IS_ACTIVE)" +
+                "VALUES ('"+ formData.firstname +"', '"+ formData.lastname +"', '"+ formData.gender +"', " + 
+                "'"+ formData.email +"', '"+ formData.mobileno + "', '"+ formData.pan + "', " +
+                "'"+ formData.username +"', '" + formData.password +"', "+ formData.usertypeid + ", "+ formData.departmentid + ", " + 
+                formData.IsActive + ")";
+                localStorage.setItem("query", sql)
+                dbObj.ExecuteSQL(sql, [], 
+                    (tx, result)=> { setFormData({...formData, userid: result.insertId})}, 
+                    (tx, result)=> { console.dir(result) });
+            }
+            else
+            {
+                alert('Please select department and usertype');
+                return false;
+            }
+        }
+        
+    }
     
   return (
           <Row className="justify-content-md-center">
             <Col xs lg="2"></Col>
             <Col xs lg="8">
               <Container>
-                <Form className="form-horizontal">
+                <Form className="form-horizontal" onSubmit={InsertUserData}>
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>Add User</h1>
                     
                     <Form.Group as={Row}>
@@ -101,8 +166,8 @@ function AddUser() {
                             Gender
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale'  />
-                            <Form.Check inline label="Female" type='radio' name="gender" id='chkFemale' />
+                            <Form.Check inline label="Male" type='radio' name="gender" id='chkMale' onChange={ onChange } checked={formData.rdMale} />
+                            <Form.Check inline label="Female" type='radio' name="gender" id='chkFemale' onChange={ onChange } checked={formData.rdFemale} />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
@@ -110,7 +175,7 @@ function AddUser() {
                             Email Address
                         </Form.Label>
                         <Col sm="10">
-                            <Form.Control type="email" placeholder="Email address" onChange={ onChange } value={formData.email}  required />
+                            <Form.Control type="email" placeholder="Email address" id="email" onChange={ onChange } value={formData.email}  required />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
@@ -118,13 +183,13 @@ function AddUser() {
                             Mobile No
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="Mobile number" onChange={ onChange } value={formData.mobileno}  required />
+                            <Form.Control type="text" placeholder="Mobile number" id="mobileno"  onChange={ onChange } value={formData.mobileno}  required />
                         </Col>
                         <Form.Label column sm="2" className="font-weight-bold">
                             PAN Number
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="PAN number" onChange={ onChange } value={formData.pan}  />
+                            <Form.Control type="text" placeholder="PAN number" id="pan"  onChange={ onChange } value={formData.pan}  />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
@@ -132,13 +197,13 @@ function AddUser() {
                             User Name
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="User name" onChange={ onChange } value={formData.username}  required />
+                            <Form.Control type="text" placeholder="User name" id="username" onChange={ onChange } value={formData.username}  required />
                         </Col>
                         <Form.Label column sm="2" className="font-weight-bold">
                             Password
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control type="text" placeholder="Password" onChange={ onChange } value={formData.password}  required />
+                            <Form.Control type="text" placeholder="Password" id="password" onChange={ onChange } value={formData.password}  required />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
@@ -146,7 +211,7 @@ function AddUser() {
                             User Type
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control as="select" id="usertype">
+                            <Form.Control as="select" id="usertypeid" onChange={ onChange } >
                             {
                                 userTypes.map((item, index)=>{
                                     return (
@@ -160,7 +225,7 @@ function AddUser() {
                             Department
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Control as="select" required id="department">
+                            <Form.Control as="select" required id="departmentid" onChange={ onChange } required>
                             {
                                 departments.map((item, index)=>{
                                     return (
@@ -175,7 +240,7 @@ function AddUser() {
                         <Form.Label column sm="2" className="font-weight-bold">
                         </Form.Label>
                         <Col sm="4">
-                            <Form.Check type="checkbox" label="Is Active" onChange={ onChange } value={formData.IsActive}  />
+                            <Form.Check type="checkbox" label="Is Active" id='IsActive' onChange={ onChange } value={formData.IsActive}  />
                         </Col>
                     </Form.Group>
                     <Form.Group as={Row} >
