@@ -13,29 +13,65 @@ let initForm = {
     rdMale : true, rdFemale : false
 };
 
-function AddUser() {
+function AddUser(props) {
     const dbObj = new DataAccess();
     const [departments, setDepartments] = useState([]);
     const [userTypes, setUserTypes] = useState([]);
     const [formData, setFormData] = useState(initForm);
+    let sql =''
 
     useEffect(()=>{
+        console.dir(props.match.params.id);
+        fillDropDown();
+        if(props.match.params.id)
+        {
+            GetUserDetails(props.match.params.id)
+        }
+    },[]);
+
+    
+
+    const fillDropDown = ()=>{
         //Initial Page Load Data
         let sql = "SELECT 0 AS DEPARTMENT_ID, '--SELECT--' AS DEPARTMENT UNION " +
-                "SELECT DEPARTMENT_ID, DEPARTMENT FROM DEPARTMENT";
-                
+        "SELECT DEPARTMENT_ID, DEPARTMENT FROM DEPARTMENT";
+
         dbObj.ExecuteSQL(sql, [], (tx, result)=> { 
-            fillControlData(result.rows, 'DEPARTMENT') }, 
-            (tx, result)=> {  });
+        fillControlData(result.rows, 'DEPARTMENT') }, 
+        (tx, result)=> {  });
 
         sql = "SELECT 0 AS USER_TYPE_ID, '--SELECT--' AS USER_TYPE UNION " +
-            "SELECT USER_TYPE_ID, USER_TYPE FROM USER_TYPE";
+        "SELECT USER_TYPE_ID, USER_TYPE FROM USER_TYPE";
         dbObj.ExecuteSQL(sql, [], (tx, result)=> { 
-            fillControlData(result.rows, 'USER_TYPE') }, 
-            (tx, result)=> {  });
+        fillControlData(result.rows, 'USER_TYPE') }, 
+        (tx, result)=> {  });
         //Initial Page Load Data
+    }
 
-    },[]);
+    const GetUserDetails = (usrId) =>{
+        sql = "SELECT USER_ID, FIRST_NAME, LAST_NAME, GENDER, EMAIL_ID, MOBILE_NO, " +
+            "PAN_NO, USERNAME, PASSWORD, USER_TYPE, DEPARTMENT_ID, IS_ACTIVE " +
+            "FROM USER WHERE USER_ID = " + usrId
+            
+        dbObj.ExecuteSQL(sql, [], (tx, res)=> { 
+           
+            var result = res.rows;
+            for (let i = 0; i < result.length; i++) 
+            {
+                let item = result[i];
+                setFormData({
+                    userid  : item.USER_ID, firstname : item.FIRST_NAME,
+                    lastname : item.LAST_NAME, gender : item.GENDER,
+                    email : item.EMAIL_ID, mobileno : item.MOBILE_NO,
+                    pan : item.PAN_NO, username : item.USERNAME,
+                    password : item.PASSWORD, usertypeid : item.USER_TYPE,
+                    departmentid : item.DEPARTMENT_ID, IsActive : (item.IS_ACTIVE == 1 ? true : false),
+                    rdMale : (item.GENDER == 'Male' ? true : false), rdFemale : (item.GENDER == 'Female' ? true : false)
+                });
+            }
+        }, 
+        (tx, result)=> { });
+    }
 
     const fillControlData =(result, type)=>{
         let arr = [];

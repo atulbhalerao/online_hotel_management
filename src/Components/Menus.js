@@ -49,10 +49,10 @@ function Menus() {
       </Nav>
     </Navbar.Collapse>
   </Navbar>
-  <Switch>    
-          
+    <Switch>    
           <Route exact path='/Login'  component={Login} />
           <Route exact path='/AddUser'  component={AddUser} />
+          <Route exact path='/AddUser/:id'  component={AddUser} />
           <Route exact path='/ViewUser'  component={ViewUser} />
           <Route exact path='/AddRoom'  component={AddRoom} />
           <Route exact path='/ViewRoom'  component={ViewRoom} />
