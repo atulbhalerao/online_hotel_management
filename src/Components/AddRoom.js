@@ -16,9 +16,19 @@ function AddRoom(props) {
     const [formData, setFormData] = useState(initForm);
     const history = useHistory();
     let sql ='';
+
+    const RedirectToPage = (pageName)=>{
+        const pages = ['adduser','viewuser','addroom', 'viewuser', 'makereservation', 'viewreservation'];
+        if(pages.indexOf(String(pageName).toLocaleLowerCase()) > -1)
+        {
+            history.push('/' + pageName);
+        }
+    }
+
     useEffect(()=>{
         if(props.match.params.id)
         {
+            RedirectToPage(props.match.params.id)
             GetRoomDetails(props.match.params.id)
         }
     },[]);

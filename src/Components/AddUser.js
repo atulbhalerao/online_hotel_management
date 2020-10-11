@@ -22,10 +22,19 @@ function AddUser(props) {
     const history = useHistory();
     let sql =''
 
+    const RedirectToPage = (pageName)=>{
+        const pages = ['adduser','viewuser','addroom', 'viewuser', 'makereservation', 'viewreservation'];
+        if(pages.indexOf(String(pageName).toLocaleLowerCase()) > -1)
+        {
+            history.push('/' + pageName);
+        }
+    }
+
     useEffect(()=>{
         fillDropDown();
         if(props.match.params.id)
         {
+            RedirectToPage(props.match.params.id)
             GetUserDetails(props.match.params.id)
         }
     },[]);

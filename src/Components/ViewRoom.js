@@ -52,7 +52,6 @@ function ViewRoom() {
                 })
             }
             setRooms(arr);  
-            console.dir(arr)          
         }, 
         (tx, result)=> { });
     }

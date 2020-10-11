@@ -12,10 +12,6 @@ let initForm = {
     address : '', email : '', mobileno : ''
 };
 
-
-
-
-
 function MakeReservation(props) {
     const dbObj = new DataAccess();
     const [rooms, setRooms] = useState([]);
@@ -23,6 +19,14 @@ function MakeReservation(props) {
     const [formData, setFormData] = useState(initForm);
     const history = useHistory();
     let sql =''
+
+    const RedirectToPage = (pageName)=>{
+        const pages = ['adduser','viewuser','addroom', 'viewuser', 'makereservation', 'viewreservation'];
+        if(pages.indexOf(String(pageName).toLocaleLowerCase()) > -1)
+        {
+            history.push('/' + pageName);
+        }
+    }
 
     useEffect(()=>{
         PopulateAvailableRooms();
@@ -40,6 +44,7 @@ function MakeReservation(props) {
     useEffect(()=>{
         if(props.match.params.id)
         {
+            RedirectToPage(props.match.params.id);
             PopulateReservationDetails(props.match.params.id)
         }
     },[]);
