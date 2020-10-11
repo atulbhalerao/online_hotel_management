@@ -6,9 +6,7 @@ import { useHistory } from 'react-router-dom'
 
 let initSearchCriteria = {
     roomno : '',
-    floorno : '',
-    capacity : '',
-    IsReserved : false
+    guestname : ''
 }
 
 function ViewReservation() {
@@ -29,7 +27,8 @@ function ViewReservation() {
             "FROM RESERVATION R LEFT JOIN GUEST G ON R.GUEST_ID = R.GUEST_ID " +
             "LEFT JOIN RESERVATION_ROOM RM ON R.RESERVATION_ID = RM.RESERVATION_ID " +
             "LEFT JOIN ROOM ROOM ON RM.ROOM_ID = ROOM.ROOM_ID " +
-            "WHERE 1 = 1"
+            "WHERE R.IS_ACTIVE = true AND (G.FIRST_NAME LIKE '%"+ searchCriteria.guestname + "%' OR G.LAST_NAME LIKE '%"+ searchCriteria.guestname + "%') " +
+            "AND ROOM.ROOM_NO LIKE '"+ searchCriteria.roomno + "%'";
             //"WHERE R.RESERVATION_ID = " + id
         
         dbObj.ExecuteSQL(sql, [], (tx, res)=> { 
@@ -67,48 +66,49 @@ function ViewReservation() {
     }
 
     const handleDeleteEvent = (id)=>{
-        sql = "DELETE FROM ROOM WHERE ROOM_ID = " + id;
-        // dbObj.ExecuteSQL(sql, [], (tx, res)=> {
-        //     var roomList = rooms.filter(r=> r.roomid != id); 
-        //     setRooms(roomList);
-        //     alert('Record deleted successfully');
-        // }, 
-        // (tx, result)=> { 
-        //     alert('Something went wrong');
-        // });
+        sql = "UPDATE RESERVATION SET IS_ACTIVE = false WHERE RESERVATION_ID = " + id;
+        dbObj.ExecuteSQL(sql, [], (tx, res)=> {
+            var resList = reservation.filter(r=> r.reservationid != id); 
+            setReservation(resList);
+            alert('Record deleted successfully');
+        }, 
+        (tx, result)=> { 
+            alert('Something went wrong');
+        });
     }
 
+    const onChange = (e) => {  
+        e.persist();
+        if(e.target.type === 'checkbox') {
+            setSearchCriteria({...searchCriteria, IsReserved: e.target.checked});  
+        }
+        else {
+            setSearchCriteria({...searchCriteria, [e.target.id]: e.target.value});  
+        }
+    } 
+    const searchReservation = (e)=>{
+        e.preventDefault();
+        PopulateReservationDetails();
+    }
     return (
           <Row className="justify-content-md-center">
             <Col xs lg="1"></Col>
             <Col xs lg="10">
               {/* <Container> */}
-                <Form className="form-horizontal" style={{paddingBottom: '20px'}}>
+                <Form className="form-horizontal" style={{paddingBottom: '20px'}} onSubmit={ searchReservation }>
                     <h1 style={{textAlign:"center", paddingTop:'50px', paddingBottom:'15px' }}>View Reservation</h1>
                     <Form.Group as={Row}>
                         <Form.Label column sm="1" className="font-weight-bold">
-                            Name
+                            Room No
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control type="text" placeholder="name"  />
+                            <Form.Control type="text" placeholder="Room No" id="roomno" value= {searchCriteria.roomno} onChange= { onChange }  />
                         </Col>
-                        <Form.Label column sm="1" className="font-weight-bold">
-                            User Name
+                        <Form.Label column sm="2" className="font-weight-bold">
+                            Guest Name
                         </Form.Label>
                         <Col sm="2">
-                            <Form.Control type="text" placeholder="user name" />
-                        </Col>
-                        <Form.Label column sm="1" className="font-weight-bold">
-                            User Type
-                        </Form.Label>
-                        <Col sm="2">
-                            <Form.Control as="select">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </Form.Control>
+                            <Form.Control type="text" placeholder="Guest name" id="guestname"  value= {searchCriteria.guestname} onChange= { onChange }  />
                         </Col>
                         <Col sm="3">
                             <Button variant="primary" type="submit">

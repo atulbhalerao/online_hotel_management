@@ -19,7 +19,6 @@ function Login(props) {
   const [user, setUser] = useState(inituser)
   const history = useHistory();
   
-  
   const onLoginClick =(e)=>{
     //e.preventDefault();
     if(user && user.username.toLocaleLowerCase() == 'admin' && user.password == 'Admin')
@@ -32,6 +31,7 @@ function Login(props) {
         error : false,
       }
       setUser(_user)
+      dbObj.CreateDBSchema();
       CreateLoginSession(_user);
     }
     else

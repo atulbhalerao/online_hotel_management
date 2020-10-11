@@ -174,7 +174,7 @@ function AddUser(props) {
                 dbObj.ExecuteSQL(sql, [], 
                     (tx, result)=> { setFormData({...formData, userid: result.insertId})
                     alert('Data saved successfully');    
-                }, (tx, result)=> { alert('Something went wrong'); });
+                }, (tx, result)=> { console.dir(result); alert('Something went wrong'); });
             }
             else
             {

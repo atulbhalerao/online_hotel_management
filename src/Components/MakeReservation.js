@@ -152,8 +152,8 @@ function MakeReservation(props) {
             dbObj.ExecuteSQL(sql, [], 
                 (tx, result)=> { 
                     setFormData({...formData, guestid: result.insertId})
-                    sql = "INSERT INTO RESERVATION(GUEST_ID, CHECK_IN, CHECK_OUT, NO_OF_GUEST) " + 
-                        "VALUES(" + result.insertId + ", '" + formData.checkin + "', '" + formData.checkout + "', " + formData.noofguest +")"
+                    sql = "INSERT INTO RESERVATION(GUEST_ID, CHECK_IN, CHECK_OUT, NO_OF_GUEST, IS_ACTIVE) " + 
+                        "VALUES(" + result.insertId + ", '" + formData.checkin + "', '" + formData.checkout + "', " + formData.noofguest +", true)"
                     
                     dbObj.ExecuteSQL(sql, [],
                         (tx, result)=>{
